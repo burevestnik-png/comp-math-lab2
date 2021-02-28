@@ -1,0 +1,37 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
+javafx {
+    version = "11.0.2"
+    modules = ['javafx.controls', 'javafx.graphics']
+}
+
+group = 'me.yaroslav'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'no.tornado', name: 'tornadofx', version: '1.7.20'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '11'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'MainKt'
+    }
+    baseName 'gauss'
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+application {
+    mainClassName = 'MainKt'
+}
