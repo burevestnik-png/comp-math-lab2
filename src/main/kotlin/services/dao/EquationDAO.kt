@@ -9,6 +9,8 @@ class EquationDAO: DAO<Equation> {
 
             }
         }
+
+        return Equation(emptyArray(), emptyArray())
     }
 
     override fun saveItem(source: String, t: Equation) {
