@@ -38,7 +38,7 @@ class RootView : View("Yarki's computations") {
                     hgrow = Priority.ALWAYS
                 }
 
-                add<OptionView>()
+                add(find<OptionView>(mapOf(RootView::equation to equation)))
             }
 
             separator(Orientation.VERTICAL)

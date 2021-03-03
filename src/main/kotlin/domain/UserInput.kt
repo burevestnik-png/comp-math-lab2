@@ -2,20 +2,37 @@ package domain
 
 import tornadofx.getProperty
 import tornadofx.property
+import com.google.gson.annotations.SerializedName
 
-class UserInput {
-    var equation by property<Equation>()
+class UserInput(
+    leftBorder: Double,
+    rightBorder: Double,
+    accuracy: Double,
+    equation: Equation?
+) {
+    var equation: Equation by property<Equation>()
     fun equationProperty() = getProperty(UserInput::equation)
 
-    var leftBorder by property<Double>()
+    @get:SerializedName("left-border")
+    var leftBorder: Double by property<Double>()
     fun leftBorderProperty() = getProperty(UserInput::leftBorder)
 
-    var rightBorder by property<Double>()
+    @get:SerializedName("right-border")
+    var rightBorder: Double by property<Double>()
     fun rightBorderProperty() = getProperty(UserInput::rightBorder)
 
-    var accuracy by property<Double>()
+    var accuracy: Double by property<Double>()
     fun accuracyProperty() = getProperty(UserInput::accuracy)
 
-    var logs by property<String>()
-    fun logsProperty() = getProperty(UserInput::logs)
+    init {
+        // TODO
+        this.equation = equation ?: Equation(emptyArray(), emptyArray())
+        this.accuracy = accuracy
+        this.leftBorder = leftBorder
+        this.rightBorder = rightBorder
+    }
+
+    override fun toString(): String {
+        return "UserInput(equation=$equation, leftBorder=$leftBorder, rightBorder=$rightBorder, accuracy=$accuracy)"
+    }
 }

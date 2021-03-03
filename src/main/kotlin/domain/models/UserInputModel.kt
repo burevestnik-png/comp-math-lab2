@@ -1,8 +1,9 @@
-package domain
+package domain.models
 
+import domain.Equation
+import domain.UserInput
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.Property
-import javafx.beans.property.StringProperty
 import tornadofx.ItemViewModel
 
 class UserInputModel : ItemViewModel<UserInput>(UserInput()) {
@@ -10,5 +11,4 @@ class UserInputModel : ItemViewModel<UserInput>(UserInput()) {
     val leftBorder: DoubleProperty = bind { item?.leftBorderProperty() }
     val rightBorder: DoubleProperty = bind { item?.rightBorderProperty() }
     val accuracy: DoubleProperty = bind { item?.accuracyProperty() }
-    val logs: StringProperty = bind { item?.logsProperty() }
 }

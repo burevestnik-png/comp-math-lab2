@@ -1,24 +1,30 @@
 package views.optionView
 
+import domain.Equation
+import domain.models.UserInputModel
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
+import services.LogService
 import tornadofx.*
 import views.styles.RootStyles
 import views.styles.Util
 
 class OptionView : View() {
-    private val functions = FXCollections.observableArrayList<String>("First", "Second", "Third")
+    private val equation: Equation by param()
+    private val functions = FXCollections.observableArrayList(equation)
+    private val userInputModel: UserInputModel by inject()
+    private val logService: LogService by inject()
 
     override val root = vbox {
         alignment = Pos.CENTER
         prefWidth = Util.scale(RootStyles.PREF_WIDTH.toDouble(), 0.1)
 
+
         form {
             fieldset("Choose function:") {
                 field {
-                    combobox<String> {
+                    combobox<Equation>(userInputModel.equation) {
                         useMaxWidth = true
-
                         items = functions
                     }
                 }
@@ -26,15 +32,15 @@ class OptionView : View() {
 
             fieldset("Choose options:") {
                 field("Left border:") {
-                    textfield()
+                    textfield(userInputModel.leftBorder)
                 }
 
                 field("Right border:") {
-                    textfield()
+                    textfield(userInputModel.rightBorder)
                 }
 
                 field("Accuracy:") {
-                    textfield()
+                    textfield(userInputModel.accuracy)
                 }
             }
 
@@ -43,7 +49,10 @@ class OptionView : View() {
 
                 button("Compute") {
                     action {
-                        println("Hi")
+                        userInputModel.commit {
+                            val a = userInputModel.item
+                            logService.add(a.equation.toString())
+                        }
                     }
                 }
             }
@@ -53,9 +62,7 @@ class OptionView : View() {
 
         form {
             fieldset("Logs:") {
-                textarea {
-
-                }
+                textarea(logService.logs)
             }
         }
 

@@ -1,7 +1,11 @@
 package domain
 
+import com.google.gson.annotations.SerializedName
+
 data class Equation(
+    @SerializedName("left-tokens")
     val leftTokens: Array<String>,
+    @SerializedName("right-tokens")
     val rightTokens: Array<String>
 ) {
     override fun equals(other: Any?): Boolean {

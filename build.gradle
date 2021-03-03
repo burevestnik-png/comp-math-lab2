@@ -10,7 +10,7 @@ javafx {
 }
 
 group = 'me.yaroslav'
-version = '1.0-SNAPSHOT'
+//version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     implementation group: 'no.tornado', name: 'tornadofx', version: '1.7.20'
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
 
 compileKotlin {
@@ -28,7 +29,7 @@ jar {
     manifest {
         attributes 'Main-Class': 'MainKt'
     }
-    baseName 'gauss'
+    baseName 'solver'
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
