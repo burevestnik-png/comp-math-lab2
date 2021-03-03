@@ -1,15 +1,24 @@
 package domain
 
+import com.google.gson.annotations.SerializedName
 import tornadofx.getProperty
 import tornadofx.property
-import com.google.gson.annotations.SerializedName
 
 class UserInput(
-    leftBorder: Double,
-    rightBorder: Double,
-    accuracy: Double,
-    equation: Equation?
 ) {
+    constructor(
+        leftBorder: Double,
+        rightBorder: Double,
+        accuracy: Double,
+        equation: Equation?
+    ) : this() {
+        this.equation = equation ?: Equation(emptyArray(), emptyArray())
+        this.accuracy = accuracy
+        this.leftBorder = leftBorder
+        this.rightBorder = rightBorder
+    }
+
+
     var equation: Equation by property<Equation>()
     fun equationProperty() = getProperty(UserInput::equation)
 
@@ -23,14 +32,6 @@ class UserInput(
 
     var accuracy: Double by property<Double>()
     fun accuracyProperty() = getProperty(UserInput::accuracy)
-
-    init {
-        // TODO
-        this.equation = equation ?: Equation(emptyArray(), emptyArray())
-        this.accuracy = accuracy
-        this.leftBorder = leftBorder
-        this.rightBorder = rightBorder
-    }
 
     override fun toString(): String {
         return "UserInput(equation=$equation, leftBorder=$leftBorder, rightBorder=$rightBorder, accuracy=$accuracy)"
