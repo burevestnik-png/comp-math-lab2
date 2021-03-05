@@ -1,10 +1,12 @@
 package views
 
 import domain.Equation
+import domain.UserInput
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
-import services.dao.EquationDAO
+import services.dao.JsonDAO
+import services.dao.Mode
 import services.dao.exceptions.NoFileChosenException
 import tornadofx.*
 import views.fragments.Notification
@@ -14,24 +16,23 @@ import views.optionView.OptionView
 
 class RootView : View("Yarki's computations") {
     private val equation = Equation(arrayOf("+", "1.0", "-", "4.5", "-", "9.21", "-", "0.383"), arrayOf("0"))
-    private val resourceEquations: Array<Equation> = emptyArray()
-    private val equationDAO: EquationDAO by inject()
+    private val resourceEquations: MutableList<Equation> = arrayListOf()
+    private val equationDAO: JsonDAO<Equation> by inject()
+    private val userInputDAO: JsonDAO<UserInput> by inject()
 
     override val root = borderpane {
         top = menubar {
             menu("Menu") {
                 item("Import", "Ctrl+I") {
                     action {
-                        val equation = importEquation()
+                        val userInput = importEquation()
                     }
                 }
                 separator()
                 item("Save", "Ctrl+S").action {
-                    TODO("ADD SHORTCUT")
                     println("Saving!")
                 }
                 item("Quit", "Ctrl+Q").action {
-                    /*TODO("ADD SHORTCUT")*/
                     println("Quitting!")
                 }
             }
@@ -45,7 +46,7 @@ class RootView : View("Yarki's computations") {
                     hgrow = Priority.ALWAYS
                 }
 
-                add(find<OptionView>(mapOf(RootView::equation to equation)))
+                add(find<OptionView>(mapOf(RootView::resourceEquations to resourceEquations)))
             }
 
             separator(Orientation.VERTICAL)
@@ -61,12 +62,13 @@ class RootView : View("Yarki's computations") {
     }
 
     override fun onDock() {
-
+        resourceEquations.addAll(equationDAO.getAll(Equation::class.java, Mode.RESOURCE))
+        resourceEquations.forEach { println(it)}
     }
 
-    private fun importEquation(): Equation? {
+    private fun importEquation(): UserInput? {
         return try {
-            equationDAO.getItem()
+            userInputDAO.getItem(UserInput::class.java)
         } catch (e: NoFileChosenException) {
             openInternalWindow(
                 Notification::class,

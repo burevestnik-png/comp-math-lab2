@@ -10,8 +10,7 @@ import views.styles.RootStyles
 import views.styles.Util
 
 class OptionView : View() {
-    private val equation: Equation by param()
-    private val functions = FXCollections.observableArrayList(equation)
+    private val resourceEquations: MutableList<Equation> by param()
     private val userInputModel: UserInputModel by inject()
     private val logService: LogService by inject()
 
@@ -23,9 +22,9 @@ class OptionView : View() {
         form {
             fieldset("Choose function:") {
                 field {
-                    combobox<Equation>(userInputModel.equation) {
+                    combobox(userInputModel.equation) {
                         useMaxWidth = true
-                        items = functions
+                        items = FXCollections.observableArrayList(resourceEquations)
                     }
                 }
             }

@@ -1,14 +1,13 @@
 package services.dao
 
 import com.google.gson.Gson
-import domain.Equation
 import javafx.stage.FileChooser
 import services.dao.exceptions.NoFileChosenException
 import services.utils.Resources
 import tornadofx.Controller
 import java.io.File
 
-class EquationDAO : DAO<Equation>, Controller() {
+class JsonDAO<T> : DAO<T>, Controller() {
     private val NFCE_MESSAGE = "Please, choose the file which you want to import"
 
     private val fileChooser: FileChooser = FileChooser().apply {
@@ -18,17 +17,17 @@ class EquationDAO : DAO<Equation>, Controller() {
     }
 
 
-    override fun saveItem(source: String, t: Equation) {
+    override fun saveItem(clazz: Class<T>, source: String, t: T) {
         TODO("Not yet implemented")
     }
 
-    override fun getAll(mode: Mode): Array<Equation> {
-        val files: ArrayList<Equation> = arrayListOf()
+    override fun getAll(clazz: Class<T>, mode: Mode): List<T> {
+        val files: MutableList<T> = arrayListOf()
 
         when (mode) {
             Mode.RESOURCE -> {
                 for (res in Resources.values()) {
-                    getItem(Mode.RESOURCE, res.source).let { files.add(it) }
+                    files.add(getItem(clazz, Mode.RESOURCE, res.source))
                 }
             }
             Mode.FILE -> {
@@ -36,23 +35,23 @@ class EquationDAO : DAO<Equation>, Controller() {
             }
         }
 
-        return files.toTypedArray()
+        return files.toList()
     }
 
-    override fun getItem(mode: Mode, source: String): Equation {
+    override fun getItem(clazz: Class<T>, mode: Mode, source: String): T {
         return when (mode) {
             Mode.FILE -> {
                 val file = fileChooser.showOpenDialog(null) ?: throw NoFileChosenException(NFCE_MESSAGE)
-                parseJson(file.readText())
+                parseJson(file.readText(), clazz)
             }
             Mode.RESOURCE -> {
                 val file = resources.json(source)
-                parseJson(file.toString())
+                parseJson(file.toString(), clazz)
             }
         }
     }
 
-    private fun parseJson(content: String): Equation {
-        return Gson().fromJson(content, Equation::class.java)
+    private fun parseJson(content: String, clazz: Class<T>): T {
+        return Gson().fromJson(content, clazz)
     }
 }
