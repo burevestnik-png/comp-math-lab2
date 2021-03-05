@@ -3,11 +3,14 @@ package services.dao
 import com.google.gson.Gson
 import domain.Equation
 import javafx.stage.FileChooser
+import services.dao.exceptions.NoFileChosenException
 import services.utils.Resources
 import tornadofx.Controller
 import java.io.File
 
 class EquationDAO : DAO<Equation>, Controller() {
+    private val NFCE_MESSAGE = "Please, choose the file which you want to import"
+
     private val fileChooser: FileChooser = FileChooser().apply {
         title = "Select file"
         initialDirectory = File(System.getProperty("user.home"))
@@ -25,7 +28,7 @@ class EquationDAO : DAO<Equation>, Controller() {
         when (mode) {
             Mode.RESOURCE -> {
                 for (res in Resources.values()) {
-                    getItem(Mode.RESOURCE, res.source)?.let { files.add(it) }
+                    getItem(Mode.RESOURCE, res.source).let { files.add(it) }
                 }
             }
             Mode.FILE -> {
@@ -36,15 +39,11 @@ class EquationDAO : DAO<Equation>, Controller() {
         return files.toTypedArray()
     }
 
-    override fun getItem(mode: Mode, source: String): Equation? {
+    override fun getItem(mode: Mode, source: String): Equation {
         return when (mode) {
             Mode.FILE -> {
-                val file = fileChooser.showOpenDialog(null)
-                if (file == null) {
-                    null
-                } else {
-                    parseJson(file.readText())
-                }
+                val file = fileChooser.showOpenDialog(null) ?: throw NoFileChosenException(NFCE_MESSAGE)
+                parseJson(file.readText())
             }
             Mode.RESOURCE -> {
                 val file = resources.json(source)
