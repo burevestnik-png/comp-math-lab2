@@ -1,5 +1,4 @@
 {
-  "left-border": -10,
-  "right-border": 10,
-  "accuracy": 0.01
+  "left-tokens": ["+", "1.0", "-", "4.5", "-", "9.21", "-", "0.383"],
+  "right-tokens": ["0"]
 }

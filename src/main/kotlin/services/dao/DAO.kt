@@ -6,7 +6,7 @@ enum class Mode {
 }
 
 interface DAO<T> {
-    fun getItem(source: String, mode: Mode): T
-
+    fun getAll(mode: Mode): Array<T>
+    fun getItem(mode: Mode = Mode.FILE, source: String = ""): T?
     fun saveItem(source: String, t: T)
 }
