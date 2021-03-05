@@ -5,14 +5,23 @@ import domain.models.UserInputModel
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
 import services.LogService
+import services.dao.JsonDAO
+import services.dao.Mode
 import tornadofx.*
 import views.styles.RootStyles
 import views.styles.Util
 
 class OptionView : View() {
-    private val resourceEquations: MutableList<Equation> by param()
+    private val resourceEquations: MutableList<Equation> = arrayListOf()
+
+    private val equationDAO: JsonDAO<Equation> by inject()
     private val userInputModel: UserInputModel by inject()
     private val logService: LogService by inject()
+
+    init {
+        resourceEquations.addAll(equationDAO.getAll(Equation::class.java, Mode.RESOURCE))
+        userInputModel.equation.value = resourceEquations.first()
+    }
 
     override val root = vbox {
         alignment = Pos.CENTER

@@ -1,12 +1,11 @@
 package views
 
-import domain.Equation
 import domain.UserInput
+import domain.models.UserInputModel
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import services.dao.JsonDAO
-import services.dao.Mode
 import services.dao.exceptions.NoFileChosenException
 import tornadofx.*
 import views.fragments.Notification
@@ -15,9 +14,6 @@ import views.graphView.GraphView
 import views.optionView.OptionView
 
 class RootView : View("Yarki's computations") {
-    private val equation = Equation(arrayOf("+", "1.0", "-", "4.5", "-", "9.21", "-", "0.383"), arrayOf("0"))
-    private val resourceEquations: MutableList<Equation> = arrayListOf()
-    private val equationDAO: JsonDAO<Equation> by inject()
     private val userInputDAO: JsonDAO<UserInput> by inject()
 
     override val root = borderpane {
@@ -46,7 +42,7 @@ class RootView : View("Yarki's computations") {
                     hgrow = Priority.ALWAYS
                 }
 
-                add(find<OptionView>(mapOf(RootView::resourceEquations to resourceEquations)))
+                add(find<OptionView>())
             }
 
             separator(Orientation.VERTICAL)
@@ -56,14 +52,9 @@ class RootView : View("Yarki's computations") {
                     hgrow = Priority.ALWAYS
                 }
 
-                add(find<GraphView>(mapOf(RootView::equation to equation)))
+                add(find<GraphView>())
             }
         }
-    }
-
-    override fun onDock() {
-        resourceEquations.addAll(equationDAO.getAll(Equation::class.java, Mode.RESOURCE))
-        resourceEquations.forEach { println(it)}
     }
 
     private fun importEquation(): UserInput? {

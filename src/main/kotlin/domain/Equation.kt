@@ -29,9 +29,10 @@ data class Equation(
     override fun toString(): String {
         var result = ""
 
-        for (token in leftTokens) {
+        leftTokens.forEachIndexed { index: Int, token: String ->
             result += token
         }
+
         result += "="
         for (token in rightTokens) {
             result += token
