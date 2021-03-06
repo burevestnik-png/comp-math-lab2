@@ -20,10 +20,13 @@ class OptionView : View() {
 
     init {
         resourceEquations.addAll(equationDAO.getAll(Equation::class.java, Mode.RESOURCE))
-        userInputModel.equation.onChange {
-            logService.add("Drawing: $it")
+
+        with(userInputModel) {
+            equation.onChange {
+                logService.add("Drawing: $it")
+            }
+            equation.value = resourceEquations.first()
         }
-        userInputModel.equation.value = resourceEquations.first()
     }
 
     override val root = vbox {

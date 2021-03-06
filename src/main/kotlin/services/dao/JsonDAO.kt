@@ -1,7 +1,10 @@
 package services.dao
 
 import com.google.gson.Gson
+import domain.Equation
+import domain.UserInput
 import javafx.stage.FileChooser
+import org.hildan.fxgson.FxGson
 import services.dao.exceptions.NoFileChosenException
 import services.utils.Resources
 import tornadofx.Controller

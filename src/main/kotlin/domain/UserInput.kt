@@ -1,32 +1,54 @@
 package domain
 
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import tornadofx.getProperty
 import tornadofx.property
 
-class UserInput(
+data class JsonUserInput(
+    @SerializedName("left-border")
+    val leftBorder: Double,
+    @SerializedName("right-border")
+    val rightBorder: Double,
+    val accuracy: Double,
+    @Expose(deserialize = false)
+    val equation: Equation? = Equation(emptyArray(), emptyArray())
 ) {
-    constructor(
-        leftBorder: Double,
-        rightBorder: Double,
-        accuracy: Double,
-        equation: Equation?
-    ) : this() {
-        this.equation = equation ?: Equation(emptyArray(), emptyArray())
-        this.accuracy = accuracy
-        this.leftBorder = leftBorder
-        this.rightBorder = rightBorder
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as JsonUserInput
+
+        if (leftBorder != other.leftBorder) return false
+        if (rightBorder != other.rightBorder) return false
+        if (accuracy != other.accuracy) return false
+        if (equation != other.equation) return false
+
+        return true
     }
 
+    override fun hashCode(): Int {
+        var result = leftBorder.hashCode()
+        result = 31 * result + rightBorder.hashCode()
+        result = 31 * result + accuracy.hashCode()
+        result = 31 * result + (equation?.hashCode() ?: 0)
+        return result
+    }
 
+    override fun toString(): String {
+        return "JsonUserInput(leftBorder=$leftBorder, rightBorder=$rightBorder, accuracy=$accuracy, equation=$equation)"
+    }
+}
+
+class UserInput(
+) {
     var equation: Equation by property<Equation>()
     fun equationProperty() = getProperty(UserInput::equation)
 
-    @get:SerializedName("left-border")
     var leftBorder: Double by property<Double>()
     fun leftBorderProperty() = getProperty(UserInput::leftBorder)
 
-    @get:SerializedName("right-border")
     var rightBorder: Double by property<Double>()
     fun rightBorderProperty() = getProperty(UserInput::rightBorder)
 

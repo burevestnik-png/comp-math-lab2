@@ -45,8 +45,9 @@ class GraphView : View() {
             }
 
             accuracy.onChange {
-                println(it)
-//                redraw(equation.value, leftBorder.value, rightBorder.value, it)
+                if (it in 0.01..1.0) {
+                    redraw(equation.value, leftBorder.value, rightBorder.value, it)
+                }
             }
         }
     }

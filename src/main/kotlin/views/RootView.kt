@@ -1,6 +1,6 @@
 package views
 
-import domain.UserInput
+import domain.JsonUserInput
 import domain.models.UserInputModel
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
@@ -14,14 +14,17 @@ import views.graphView.GraphView
 import views.optionView.OptionView
 
 class RootView : View("Yarki's computations") {
-    private val userInputDAO: JsonDAO<UserInput> by inject()
+    private val jsonUserInputDAO: JsonDAO<JsonUserInput> by inject()
+    private val userInputModel: UserInputModel by inject()
 
     override val root = borderpane {
         top = menubar {
             menu("Menu") {
                 item("Import", "Ctrl+I") {
                     action {
-                        val userInput = importEquation()
+                        importUserInput()?.let {
+                            updateUserInputModel(it)
+                        }
                     }
                 }
                 separator()
@@ -29,7 +32,6 @@ class RootView : View("Yarki's computations") {
                     println("Saving!")
                 }
                 item("Quit", "Ctrl+Q").action {
-                    TODO()
                     println("Quitting!")
                 }
             }
@@ -58,9 +60,17 @@ class RootView : View("Yarki's computations") {
         }
     }
 
-    private fun importEquation(): UserInput? {
+    private fun updateUserInputModel(userInput: JsonUserInput) {
+        with(userInputModel) {
+            leftBorder.value = userInput.leftBorder
+            rightBorder.value = userInput.rightBorder
+            accuracy.value = userInput.accuracy
+        }
+    }
+
+    private fun importUserInput(): JsonUserInput? {
         return try {
-            userInputDAO.getItem(UserInput::class.java)
+            jsonUserInputDAO.getItem(JsonUserInput::class.java)
         } catch (e: NoFileChosenException) {
             openInternalWindow(
                 Notification::class,
