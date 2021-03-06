@@ -1,33 +1,20 @@
 package services
 
 import domain.Equation
+import domain.enums.Sign
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.chart.XYChart
 import tornadofx.Controller
 import kotlin.math.pow
 
-private enum class Sign(val content: String) {
-    PLUS("+"),
-    MINUS("-");
-
-    companion object {
-        fun identifySign(content: String): Sign {
-            return when (content) {
-                "-" -> MINUS
-                "+" -> PLUS
-                else -> throw RuntimeException("Internal error")
-            }
-        }
-
-        fun isSign(content: String): Boolean {
-            return content == "-" || content == "+"
-        }
-    }
-}
-
 class GraphService : Controller() {
-    fun getPlotMeta(equation: Equation?, from: Double, to: Double, step: Double): ObservableList<XYChart.Data<Double, Double>>? {
+    fun getPlotMeta(
+        equation: Equation?,
+        from: Double,
+        to: Double,
+        step: Double
+    ): ObservableList<XYChart.Data<Double, Double>>? {
         if (equation == null) return null
 
         val dots: MutableMap<Double, Double> = emptyMap<Double, Double>().toMutableMap()

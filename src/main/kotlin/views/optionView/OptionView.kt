@@ -20,6 +20,9 @@ class OptionView : View() {
 
     init {
         resourceEquations.addAll(equationDAO.getAll(Equation::class.java, Mode.RESOURCE))
+        userInputModel.equation.onChange {
+            logService.add("Drawing: $it")
+        }
         userInputModel.equation.value = resourceEquations.first()
     }
 
@@ -70,7 +73,9 @@ class OptionView : View() {
 
         form {
             fieldset("Logs:") {
-                textarea(logService.logs)
+                textarea(logService.logs) {
+                    isDisable = true
+                }
             }
         }
 

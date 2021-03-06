@@ -1,5 +1,6 @@
 package views.graphView
 
+import domain.Equation
 import domain.models.UserInputModel
 import javafx.beans.property.Property
 import javafx.beans.property.SimpleListProperty
@@ -26,11 +27,34 @@ class GraphView : View() {
                 0.1
             ) as? ObservableList<XYChart.Data<Number, Number>>?
 
-        userInputModel.equation.onChange {
-            currentGraph.value.clear()
-            for (value in graphService.getPlotMeta(it, -10.0, 10.0, 0.1)!!) {
-                currentGraph.value.add(value as XYChart.Data<Number, Number>)
+        with(userInputModel) {
+            leftBorder.value = -10.0
+            rightBorder.value = 10.0
+            accuracy.value = 0.1
+
+            equation.onChange {
+                redraw(it, leftBorder.value, rightBorder.value, accuracy.value)
             }
+
+            leftBorder.onChange {
+                redraw(equation.value, it, rightBorder.value, accuracy.value)
+            }
+
+            rightBorder.onChange {
+                redraw(equation.value, leftBorder.value, it, accuracy.value)
+            }
+
+            accuracy.onChange {
+                println(it)
+//                redraw(equation.value, leftBorder.value, rightBorder.value, it)
+            }
+        }
+    }
+
+    private fun redraw(equation: Equation?, left: Double, right: Double, accuracy: Double) {
+        currentGraph.value.clear()
+        for (value in graphService.getPlotMeta(equation, left, right, accuracy)!!) {
+            currentGraph.value.add(value as XYChart.Data<Number, Number>)
         }
     }
 

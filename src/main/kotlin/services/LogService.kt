@@ -7,7 +7,15 @@ class LogService : Controller() {
     var logs = SimpleStringProperty()
 
     fun add(string: String) {
-        val s = logs.get()
-        logs.set(s + string)
+        logs.set(getSnapshot() + string)
+        newLine()
+    }
+
+    fun newLine() {
+        logs.set(getSnapshot() + "\n")
+    }
+
+    private fun getSnapshot(): String {
+        return logs.get() ?: ""
     }
 }

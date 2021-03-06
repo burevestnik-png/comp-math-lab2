@@ -1,6 +1,7 @@
 package domain
 
 import com.google.gson.annotations.SerializedName
+import domain.enums.Sign
 
 data class Equation(
     @SerializedName("left-tokens")

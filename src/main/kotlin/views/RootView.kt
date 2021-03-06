@@ -29,6 +29,7 @@ class RootView : View("Yarki's computations") {
                     println("Saving!")
                 }
                 item("Quit", "Ctrl+Q").action {
+                    TODO()
                     println("Quitting!")
                 }
             }
