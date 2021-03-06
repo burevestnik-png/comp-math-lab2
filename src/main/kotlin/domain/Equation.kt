@@ -30,15 +30,16 @@ data class Equation(
     override fun toString(): String {
         var result = ""
 
+        val size = leftTokens.size
         leftTokens.forEachIndexed { index: Int, token: String ->
-            result += token
+            result += when {
+                Sign.isSign(token) -> " $token "
+                else -> "$token * x^${(size - index) / 2}"
+            }
         }
 
         result += "="
-        for (token in rightTokens) {
-            result += token
-        }
-
+        rightTokens.forEach { s -> result += s }
         return result
     }
 }

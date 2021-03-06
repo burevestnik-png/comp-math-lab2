@@ -1,17 +1,16 @@
 package services.dao
 
 import com.google.gson.Gson
-import domain.Equation
-import domain.UserInput
 import javafx.stage.FileChooser
-import org.hildan.fxgson.FxGson
 import services.dao.exceptions.NoFileChosenException
 import services.utils.Resources
 import tornadofx.Controller
 import java.io.File
+import java.io.PrintWriter
 
 class JsonDAO<T> : DAO<T>, Controller() {
-    private val NFCE_MESSAGE = "Please, choose the file which you want to import"
+    private val NFCE_MESSAGE_IMPORT = "Please, choose the file which you want to import"
+    private val NFCE_MESSAGE_SAVE = "Please, choose the file which you want to save"
 
     private val fileChooser: FileChooser = FileChooser().apply {
         title = "Select file"
@@ -20,8 +19,12 @@ class JsonDAO<T> : DAO<T>, Controller() {
     }
 
 
-    override fun saveItem(clazz: Class<T>, source: String, t: T) {
-        TODO("Not yet implemented")
+    override fun saveItem(t: T) {
+        val fileToSave = fileChooser.showSaveDialog(null) ?: throw NoFileChosenException(NFCE_MESSAGE_SAVE)
+        with(PrintWriter(fileToSave)) {
+            println(toJson(t))
+            close()
+        }
     }
 
     override fun getAll(clazz: Class<T>, mode: Mode): List<T> {
@@ -44,7 +47,7 @@ class JsonDAO<T> : DAO<T>, Controller() {
     override fun getItem(clazz: Class<T>, mode: Mode, source: String): T {
         return when (mode) {
             Mode.FILE -> {
-                val file = fileChooser.showOpenDialog(null) ?: throw NoFileChosenException(NFCE_MESSAGE)
+                val file = fileChooser.showOpenDialog(null) ?: throw NoFileChosenException(NFCE_MESSAGE_IMPORT)
                 parseJson(file.readText(), clazz)
             }
             Mode.RESOURCE -> {
@@ -52,6 +55,10 @@ class JsonDAO<T> : DAO<T>, Controller() {
                 parseJson(file.toString(), clazz)
             }
         }
+    }
+
+    private fun toJson(t: T): String {
+        return Gson().toJson(t)
     }
 
     private fun parseJson(content: String, clazz: Class<T>): T {

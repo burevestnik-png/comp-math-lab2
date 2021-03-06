@@ -41,8 +41,7 @@ data class JsonUserInput(
     }
 }
 
-class UserInput(
-) {
+class UserInput() {
     var equation: Equation by property<Equation>()
     fun equationProperty() = getProperty(UserInput::equation)
 
