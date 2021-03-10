@@ -4,13 +4,12 @@ import domain.JsonUserInput
 import domain.models.UserInputModel
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
+import javafx.scene.control.Alert
 import javafx.scene.layout.Priority
 import services.dao.JsonDAO
 import services.dao.exceptions.NoFileChosenException
-import services.utils.Notifications
+import services.utils.Alerts
 import tornadofx.*
-import views.fragments.Notification
-import views.fragments.NotificationType
 import views.graphView.GraphView
 import views.optionView.OptionView
 import java.io.IOException
@@ -30,7 +29,7 @@ class RootView : View("Yarki's computations") {
                         }
                     }
                 }
-                item("Save", "Ctrl+S").action {
+                item("Save", "Ctrl+S") {
                     action {
                         saveCurrentAppSnapshot()
                     }
@@ -85,7 +84,7 @@ class RootView : View("Yarki's computations") {
         } catch (e: Exception) {
             when (e) {
                 is NoFileChosenException -> {
-                    Notifications.info(this, e.message)
+                    Alerts.error(title = e.toString(), header = e.message)
                 }
                 is IOException -> {
 
@@ -98,7 +97,7 @@ class RootView : View("Yarki's computations") {
         return try {
             jsonUserInputDAO.getItem(JsonUserInput::class.java)
         } catch (e: NoFileChosenException) {
-            Notifications.info(this, e.message)
+            Alerts.error(title = e.toString(), header = e.message)
             null
         }
     }
