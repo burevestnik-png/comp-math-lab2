@@ -11,11 +11,7 @@ class LogService : Controller() {
         newLine()
     }
 
-    fun newLine() {
-        logs.set(getSnapshot() + "\n")
-    }
+    private fun newLine() = logs.set(getSnapshot() + "\n")
 
-    private fun getSnapshot(): String {
-        return logs.get() ?: ""
-    }
+    private fun getSnapshot(): String = logs.get() ?: ""
 }

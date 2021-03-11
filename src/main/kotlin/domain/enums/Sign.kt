@@ -2,27 +2,19 @@ package domain.enums
 
 enum class Sign {
     PLUS {
-        override fun toString(): String {
-            return "+"
-        }
+        override fun toString() = "+"
     },
     MINUS {
-        override fun toString(): String {
-            return "-"
-        }
+        override fun toString() = "-"
     };
 
     companion object {
-        fun identifySign(content: String): Sign {
-            return when (content) {
-                "-" -> MINUS
-                "+" -> PLUS
-                else -> throw RuntimeException("Internal error")
-            }
+        fun identifySign(content: String) = when (content) {
+            "-" -> MINUS
+            "+" -> PLUS
+            else -> throw RuntimeException("Internal error")
         }
 
-        fun isSign(content: String): Boolean {
-            return content == "-" || content == "+"
-        }
+        fun isSign(content: String) = content == "-" || content == "+"
     }
 }

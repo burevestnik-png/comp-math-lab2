@@ -31,8 +31,8 @@ class GraphService : Controller() {
     private fun toFormat(dots: MutableMap<Double, Double>): ObservableList<XYChart.Data<Double, Double>> {
         val data: MutableList<XYChart.Data<Double, Double>> = arrayListOf()
 
-        for (entry in dots.entries) {
-            data.add(XYChart.Data<Double, Double>(entry.key, entry.value))
+        for ((key, value) in dots) {
+            data.add(XYChart.Data<Double, Double>(key, value))
         }
 
         return FXCollections.observableArrayList(data)

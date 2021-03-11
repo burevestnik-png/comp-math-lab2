@@ -4,20 +4,20 @@ import javafx.scene.control.Alert
 
 class Alerts {
     companion object {
-        fun info(header: String, content: String? = "", title: String? = "") {
-            createAlert(Alert.AlertType.INFORMATION, header, content, title).apply {
+        fun info(title: String? = "", header: String, content: String? = "") {
+            createAlert(Alert.AlertType.INFORMATION, header, content, title).run {
                 showAndWait()
             }
         }
 
-        fun warn(header: String, content: String? = "", title: String? = "") {
-            createAlert(Alert.AlertType.WARNING, header, content, title).apply {
+        fun warn(title: String? = "", header: String, content: String? = "") {
+            createAlert(Alert.AlertType.WARNING, header, content, title).run {
                 showAndWait()
             }
         }
 
-        fun error(header: String? = "", content: String? = "", title: String? = "") {
-            createAlert(Alert.AlertType.ERROR, header, content, title).apply {
+        fun error(title: String? = "", header: String? = "", content: String? = "") {
+            createAlert(Alert.AlertType.ERROR, header, content, title).run {
                 showAndWait()
             }
         }

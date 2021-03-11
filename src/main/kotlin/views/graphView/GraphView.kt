@@ -9,9 +9,11 @@ import javafx.scene.Cursor
 import javafx.scene.chart.NumberAxis
 import javafx.scene.chart.XYChart
 import services.GraphService
+import services.utils.Alerts
 import tornadofx.*
 import views.styles.RootStyles
 import views.styles.Util
+import java.math.RoundingMode
 
 class GraphView : View() {
     private val userInputModel: UserInputModel by inject()
@@ -27,26 +29,34 @@ class GraphView : View() {
                 0.1
             ) as? ObservableList<XYChart.Data<Number, Number>>?
 
-        with(userInputModel) {
-            leftBorder.value = -10.0
-            rightBorder.value = 10.0
-            accuracy.value = 0.1
-
+        userInputModel.apply {
             equation.onChange {
                 redraw(it, leftBorder.value, rightBorder.value, accuracy.value)
             }
 
             leftBorder.onChange {
-                redraw(equation.value, it, rightBorder.value, accuracy.value)
+                if (it < rightBorder.value) {
+                    redraw(equation.value, it, rightBorder.value, accuracy.value)
+                } else {
+                    Alerts.error("Input error", "Left border can't be greater than right!")
+                    userInputModel.leftBorder.value = 0.0
+                }
             }
 
             rightBorder.onChange {
-                redraw(equation.value, leftBorder.value, it, accuracy.value)
+                if (it > leftBorder.value || it == 0.0) {
+                    redraw(equation.value, leftBorder.value, it, accuracy.value)
+                } else {
+                    Alerts.error("Input error", "Right border can't be smaller than left!")
+                }
             }
 
             accuracy.onChange {
-                if (it in 0.01..1.0) {
-                    redraw(equation.value, leftBorder.value, rightBorder.value, it)
+                val rounded = it.toBigDecimal().setScale(3, RoundingMode.CEILING).toDouble()
+                if (rounded in 0.01..1.0) {
+                    redraw(equation.value, leftBorder.value, rightBorder.value, rounded)
+                } else if (rounded != 0.0) {
+                    Alerts.info("Accuracy", "Accuracy values", "Values can be from 0,01 to 1,0")
                 }
             }
         }

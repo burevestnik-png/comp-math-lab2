@@ -21,7 +21,7 @@ class OptionView : View() {
     init {
         resourceEquations.addAll(equationDAO.getAll(Equation::class.java, Mode.RESOURCE))
 
-        with(userInputModel) {
+        userInputModel.apply {
             equation.onChange {
                 logService.add("Drawing: $it")
             }
@@ -45,28 +45,18 @@ class OptionView : View() {
             }
 
             fieldset("Choose options:") {
-                field("Left border:") {
-                    textfield(userInputModel.leftBorder)
-                }
-
-                field("Right border:") {
-                    textfield(userInputModel.rightBorder)
-                }
-
-                field("Accuracy:") {
-                    textfield(userInputModel.accuracy)
-                }
+                field("Left border:").textfield(userInputModel.leftBorder)
+                field("Right border:").textfield(userInputModel.rightBorder)
+                field("Accuracy:").textfield(userInputModel.accuracy)
             }
 
             hbox {
                 alignment = Pos.CENTER
 
-                button("Compute") {
-                    action {
-                        userInputModel.commit {
-                            val a = userInputModel.item
-                            logService.add(a.equation.toString())
-                        }
+                button("Compute").action {
+                    userInputModel.commit {
+                        val a = userInputModel.item
+                        logService.add(a.equation.toString())
                     }
                 }
             }
@@ -75,10 +65,8 @@ class OptionView : View() {
         separator()
 
         form {
-            fieldset("Logs:") {
-                textarea(logService.logs) {
-                    isDisable = true
-                }
+            fieldset("Logs:").textarea(logService.logs) {
+                isDisable = true
             }
         }
 

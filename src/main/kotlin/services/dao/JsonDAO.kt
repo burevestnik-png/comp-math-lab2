@@ -21,7 +21,7 @@ class JsonDAO<T> : DAO<T>, Controller() {
 
     override fun saveItem(t: T) {
         val fileToSave = fileChooser.showSaveDialog(null) ?: throw NoFileChosenException(NFCE_MESSAGE_SAVE)
-        with(PrintWriter(fileToSave)) {
+        PrintWriter(fileToSave).run {
             println(toJson(t))
             close()
         }
@@ -57,11 +57,7 @@ class JsonDAO<T> : DAO<T>, Controller() {
         }
     }
 
-    private fun toJson(t: T): String {
-        return Gson().toJson(t)
-    }
+    private fun toJson(t: T): String = Gson().toJson(t)
 
-    private fun parseJson(content: String, clazz: Class<T>): T {
-        return Gson().fromJson(content, clazz)
-    }
+    private fun parseJson(content: String, clazz: Class<T>): T = Gson().fromJson(content, clazz)
 }

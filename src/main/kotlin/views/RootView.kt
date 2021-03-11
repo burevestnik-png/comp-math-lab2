@@ -4,7 +4,6 @@ import domain.JsonUserInput
 import domain.models.UserInputModel
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
-import javafx.scene.control.Alert
 import javafx.scene.layout.Priority
 import services.dao.JsonDAO
 import services.dao.exceptions.NoFileChosenException
@@ -13,26 +12,29 @@ import tornadofx.*
 import views.graphView.GraphView
 import views.optionView.OptionView
 import java.io.IOException
-import java.lang.Exception
 
 class RootView : View("Yarki's computations") {
     private val jsonUserInputDAO: JsonDAO<JsonUserInput> by inject()
     private val userInputModel: UserInputModel by inject()
 
+    init {
+        userInputModel.apply {
+            leftBorder.value = -10.0
+            rightBorder.value = 10.0
+            accuracy.value = 0.1
+        }
+    }
+
     override val root = borderpane {
         top = menubar {
             menu("Menu") {
-                item("Import", "Ctrl+I") {
-                    action {
-                        importUserInput()?.let {
-                            updateUserInputModel(it)
-                        }
+                item("Import", "Ctrl+I").action {
+                    importUserInput()?.let {
+                        updateUserInputModel(it)
                     }
                 }
-                item("Save", "Ctrl+S") {
-                    action {
-                        saveCurrentAppSnapshot()
-                    }
+                item("Save", "Ctrl+S").action {
+                    saveCurrentAppSnapshot()
                 }
             }
         }
@@ -70,26 +72,24 @@ class RootView : View("Yarki's computations") {
     }
 
     private fun saveCurrentAppSnapshot() {
-        val snapshot = with(userInputModel) {
-             JsonUserInput(
+        try {
+            jsonUserInputDAO.saveItem(getAppSnapshot())
+        } catch (e: Exception) {
+            when (e) {
+                is NoFileChosenException -> Alerts.error(e.toString(), e.message)
+                is IOException -> Alerts.error("Unexpected error", "Saving error!")
+            }
+        }
+    }
+
+    private fun getAppSnapshot(): JsonUserInput {
+        return userInputModel.run {
+            JsonUserInput(
                 leftBorder.value,
                 rightBorder.value,
                 accuracy.value,
                 equation.value
             )
-        }
-
-        try {
-            jsonUserInputDAO.saveItem(snapshot)
-        } catch (e: Exception) {
-            when (e) {
-                is NoFileChosenException -> {
-                    Alerts.error(title = e.toString(), header = e.message)
-                }
-                is IOException -> {
-
-                }
-            }
         }
     }
 
@@ -97,7 +97,7 @@ class RootView : View("Yarki's computations") {
         return try {
             jsonUserInputDAO.getItem(JsonUserInput::class.java)
         } catch (e: NoFileChosenException) {
-            Alerts.error(title = e.toString(), header = e.message)
+            Alerts.error(e.toString(), e.message)
             null
         }
     }

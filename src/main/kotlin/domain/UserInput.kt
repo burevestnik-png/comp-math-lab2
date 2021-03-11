@@ -36,12 +36,11 @@ data class JsonUserInput(
         return result
     }
 
-    override fun toString(): String {
-        return "JsonUserInput(leftBorder=$leftBorder, rightBorder=$rightBorder, accuracy=$accuracy, equation=$equation)"
-    }
+    override fun toString() =
+        "JsonUserInput(leftBorder=$leftBorder, rightBorder=$rightBorder, accuracy=$accuracy, equation=$equation)"
 }
 
-class UserInput() {
+class UserInput {
     var equation: Equation by property<Equation>()
     fun equationProperty() = getProperty(UserInput::equation)
 
@@ -54,7 +53,6 @@ class UserInput() {
     var accuracy: Double by property<Double>()
     fun accuracyProperty() = getProperty(UserInput::accuracy)
 
-    override fun toString(): String {
-        return "UserInput(equation=$equation, leftBorder=$leftBorder, rightBorder=$rightBorder, accuracy=$accuracy)"
-    }
+    override fun toString() =
+        "UserInput(equation=$equation, leftBorder=$leftBorder, rightBorder=$rightBorder, accuracy=$accuracy)"
 }
