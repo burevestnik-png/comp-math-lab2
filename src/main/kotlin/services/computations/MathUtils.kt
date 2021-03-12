@@ -4,7 +4,7 @@ import domain.Equation
 import domain.enums.Sign
 import kotlin.math.pow
 
-class Utils {
+class MathUtils {
     companion object {
         fun computeFunctionByX(equation: Equation, x: Double): Double {
             var result = 0.0
@@ -23,6 +23,10 @@ class Utils {
             }
 
             return result
+        }
+
+        fun findDerivative(equation: Equation) {
+
         }
     }
 }

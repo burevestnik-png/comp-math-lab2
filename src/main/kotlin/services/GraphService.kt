@@ -1,13 +1,17 @@
 package services
 
+import domain.DrawingMode
 import domain.Equation
+import domain.models.DrawingSettingsModel
 import javafx.collections.ObservableList
 import javafx.scene.chart.XYChart
-import services.computations.Utils.Companion.computeFunctionByX
+import services.computations.MathUtils.Companion.computeFunctionByX
 import tornadofx.Controller
 import tornadofx.toObservable
 
 class GraphService : Controller() {
+    private val drawingSettingsModel: DrawingSettingsModel by inject()
+
     fun getPlotMeta(
         equation: Equation?,
         from: Double,
@@ -16,8 +20,10 @@ class GraphService : Controller() {
     ): ObservableList<XYChart.Data<Double, Double>>? {
         if (equation == null) return null
 
-        val dots: MutableMap<Double, Double> = hashMapOf()
-//        val dots: MutableMap<Double, Double> = linkedMapOf()
+        val dots: MutableMap<Double, Double> = when (drawingSettingsModel.drawingMode.value) {
+            DrawingMode.CLASSIC -> linkedMapOf()
+            DrawingMode.CHAOTIC -> hashMapOf()
+        }
 
         var fromCopy = from
         while (fromCopy <= to) {

@@ -13,9 +13,9 @@ class ComputationService : Controller() {
     )
 
     fun computeEquation(userInputModel: UserInputModel) {
+        logService.run {println(); println("Solving ${userInputModel.equation.value}") }
         availableMethods.forEach {
             logService.run {
-                println()
                 println("Computing extreme right root by: ${it.description}")
             }
 

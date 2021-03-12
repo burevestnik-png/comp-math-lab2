@@ -1,9 +1,12 @@
 package views.optionView
 
+import domain.DrawingMode
 import domain.Equation
+import domain.models.DrawingSettingsModel
 import domain.models.UserInputModel
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
+import javafx.scene.layout.Priority
 import services.LogService
 import services.computations.ComputationService
 import services.dao.JsonDAO
@@ -17,6 +20,7 @@ class OptionView : View() {
 
     private val equationDAO: JsonDAO<Equation> by inject()
     private val userInputModel: UserInputModel by inject()
+    private val drawingSettingsModel: DrawingSettingsModel by inject()
     private val computationService: ComputationService by inject()
     private val logService: LogService by inject()
 
@@ -34,7 +38,6 @@ class OptionView : View() {
     override val root = vbox {
         alignment = Pos.CENTER
         prefWidth = Util.scale(RootStyles.PREF_WIDTH.toDouble(), 0.1)
-
 
         form {
             fieldset("Choose function:") {
@@ -61,28 +64,35 @@ class OptionView : View() {
                     }
                 }
             }
-        }
 
-        separator()
-
-        form {
+            separator()
             fieldset("Logs:").textarea(logService.logs) {
-                isDisable = true
+                isEditable = false
             }
-        }
 
-        separator()
+            separator()
+            fieldset("Drawing settings:") {
+                field("Drawing mode:") {
+                    hbox {
+                        useMaxWidth = true
+                        alignment = Pos.CENTER
+                        togglegroup {
+                            DrawingMode.values().forEach {
+                                radiobutton(it.toString(), value = it) {
+                                    prefWidth = 129.0
+                                    alignment = Pos.CENTER
+                                    hgrow = Priority.ALWAYS
+                                }
+                            }
 
-        form {
-            fieldset("Drawing settings") {
-                field("") {
-
+                            bind(drawingSettingsModel.drawingMode)
+                        }
+                    }
                 }
             }
         }
 
         separator()
-
         hbox {
             useMaxHeight = true
         }

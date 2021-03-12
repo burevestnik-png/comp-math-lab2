@@ -38,7 +38,7 @@ data class Equation(
             }
         }
 
-        result += "="
+        result += " = "
         rightTokens.forEach { s -> result += s }
         return result
     }
