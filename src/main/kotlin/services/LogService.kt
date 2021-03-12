@@ -6,12 +6,14 @@ import tornadofx.Controller
 class LogService : Controller() {
     var logs = SimpleStringProperty()
 
-    fun add(string: String) {
+    fun print(string: String) = logs.set(getSnapshot() + string)
+
+    fun println(string: String) {
         logs.set(getSnapshot() + string)
-        newLine()
+        println()
     }
 
-    private fun newLine() = logs.set(getSnapshot() + "\n")
+    fun println() = logs.set(getSnapshot() + "\n")
 
     private fun getSnapshot(): String = logs.get() ?: ""
 }

@@ -5,6 +5,7 @@ import domain.models.UserInputModel
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
 import services.LogService
+import services.computations.ComputationService
 import services.dao.JsonDAO
 import services.dao.Mode
 import tornadofx.*
@@ -16,6 +17,7 @@ class OptionView : View() {
 
     private val equationDAO: JsonDAO<Equation> by inject()
     private val userInputModel: UserInputModel by inject()
+    private val computationService: ComputationService by inject()
     private val logService: LogService by inject()
 
     init {
@@ -23,7 +25,7 @@ class OptionView : View() {
 
         userInputModel.apply {
             equation.onChange {
-                logService.add("Drawing: $it")
+                logService.println("Drawing: $it")
             }
             equation.value = resourceEquations.first()
         }
@@ -55,8 +57,7 @@ class OptionView : View() {
 
                 button("Compute").action {
                     userInputModel.commit {
-                        val a = userInputModel.item
-                        logService.add(a.equation.toString())
+                        computationService.computeEquation(userInputModel)
                     }
                 }
             }
@@ -67,6 +68,16 @@ class OptionView : View() {
         form {
             fieldset("Logs:").textarea(logService.logs) {
                 isDisable = true
+            }
+        }
+
+        separator()
+
+        form {
+            fieldset("Drawing settings") {
+                field("") {
+
+                }
             }
         }
 
