@@ -6,6 +6,7 @@ import services.Parser.Companion.getInts
 import services.Parser.Companion.isCos
 import services.Parser.Companion.isExp
 import services.Parser.Companion.isSin
+import kotlin.math.cos
 import kotlin.math.exp
 import kotlin.math.pow
 import kotlin.math.sin
@@ -16,26 +17,22 @@ class MathUtils {
         fun computeFunctionByX(equation: Equation, x: Double): Double {
             var result = 0.0
             var tempSign = Sign.PLUS
-            equation.leftTokens.forEach { token ->
+            equation.leftTokens.forEachIndexed { index, token ->
                 if (Sign.isSign(token)) {
                     tempSign = Sign.identifySign(token)
                 } else {
                     result += when (tempSign) {
-                        Sign.PLUS -> {
-                            when {
-                                isSin(token) -> getInts(token)[0] * sin(getInts(token)[1] * x)
-                                isExp(token) -> getInts(token)[0] * exp(getInts(token)[1] * x)
-                                else -> token.toDouble() *
-                                        x.pow((equation.leftTokens.size - equation.leftTokens.indexOf(token)) / 2)
-                            }
+                        Sign.PLUS -> when {
+                            isSin(token) -> getInts(token)[0] * sin(getInts(token)[1] * x)
+                            isExp(token) -> getInts(token)[0] * exp(getInts(token)[1] * x)
+                            isCos(token) -> getInts(token)[0] * cos(getInts(token)[1] * x)
+                            else -> token.toDouble() * x.pow((equation.leftTokens.size - index) / 2)
                         }
-                        Sign.MINUS -> {
-                            when {
-                                isSin(token) -> (-1) * getInts(token)[0] * sin(getInts(token)[1] * x)
-                                isExp(token) -> (-1) * getInts(token)[0] * exp(getInts(token)[1] * x)
-                                else -> token.toDouble() * (-1) *
-                                        x.pow((equation.leftTokens.size - equation.leftTokens.indexOf(token)) / 2)
-                            }
+                        Sign.MINUS -> when {
+                            isSin(token) -> (-1) * getInts(token)[0] * sin(getInts(token)[1] * x)
+                            isExp(token) -> (-1) * getInts(token)[0] * exp(getInts(token)[1] * x)
+                            isCos(token) -> (-1) * getInts(token)[0] * cos(getInts(token)[1] * x)
+                            else -> token.toDouble() * (-1) * x.pow((equation.leftTokens.size - index) / 2)
                         }
                     }
                 }
