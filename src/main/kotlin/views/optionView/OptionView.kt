@@ -94,6 +94,7 @@ class OptionView : View() {
                 textProperty().addListener(ChangeListener { _, _, _ ->
                     scrollTop = Double.MAX_VALUE; scrollLeft = Double.MAX_VALUE
                 })
+                prefHeight = 100.0
             }
             hbox {
                 alignment = Pos.CENTER
@@ -133,10 +134,6 @@ class OptionView : View() {
             imageview("yarki.png") {
                 scaleX = .5
                 scaleY = .5
-
-                hboxConstraints {
-                    marginTop = 150.0
-                }
             }
         }
     }
