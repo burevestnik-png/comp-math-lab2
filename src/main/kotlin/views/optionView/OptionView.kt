@@ -2,6 +2,7 @@ package views.optionView
 
 import domain.DrawingMode
 import domain.Equation
+import domain.enums.CompMethodType
 import domain.models.DrawingSettingsModel
 import domain.models.UserInputModel
 import javafx.collections.FXCollections
@@ -9,17 +10,21 @@ import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import services.LogService
 import services.computations.ComputationService
-import services.computations.methods.CompMethodType
+import services.dao.FileDAO
 import services.dao.JsonDAO
 import services.dao.Mode
+import services.dao.exceptions.NoFileChosenException
+import services.utils.Alerts
 import tornadofx.*
 import views.styles.RootStyles
 import views.styles.Util
+import java.io.IOException
 
 class OptionView : View() {
     private val resourceEquations: MutableList<Equation> = arrayListOf()
 
     private val equationDAO: JsonDAO<Equation> by inject()
+    private val logDAO: FileDAO<String> by inject()
     private val userInputModel: UserInputModel by inject()
     private val drawingSettingsModel: DrawingSettingsModel by inject()
     private val computationService: ComputationService by inject()
@@ -71,9 +76,14 @@ class OptionView : View() {
             hbox {
                 alignment = Pos.CENTER
 
-                button("Compute").action {
-                    userInputModel.commit {
-                        computationService.computeEquation(userInputModel)
+                button("Compute") {
+                    action {
+                        userInputModel.commit {
+                            computationService.computeEquation(userInputModel)
+                        }
+                    }
+                    hboxConstraints {
+                        marginBottom = 20.0
                     }
                 }
             }
@@ -81,6 +91,18 @@ class OptionView : View() {
             separator()
             fieldset("Logs:").textarea(logService.logs) {
                 isEditable = false
+                textProperty().addListener(ChangeListener { _, _, _ ->
+                    scrollTop = Double.MAX_VALUE; scrollLeft = Double.MAX_VALUE
+                })
+            }
+            hbox {
+                alignment = Pos.CENTER
+                button("Save logs") {
+                    action { saveCurrentLogs() }
+                    hboxConstraints {
+                        marginBottom = 20.0
+                    }
+                }
             }
 
             separator()
@@ -107,12 +129,26 @@ class OptionView : View() {
 
         separator()
         hbox {
-            useMaxHeight = true
-        }
+            alignment = Pos.CENTER
+            imageview("yarki.png") {
+                scaleX = .5
+                scaleY = .5
 
-        imageview("yarki.png") {
-            scaleX = .5
-            scaleY = .5
+                hboxConstraints {
+                    marginTop = 150.0
+                }
+            }
+        }
+    }
+
+    private fun saveCurrentLogs() {
+        try {
+            logDAO.saveItem(logService.fullLogs.value)
+        } catch (e: Exception) {
+            when (e) {
+                is NoFileChosenException -> Alerts.error(e.toString(), e.message)
+                is IOException -> Alerts.error("Unexpected error", "Saving error!")
+            }
         }
     }
 }

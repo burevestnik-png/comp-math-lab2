@@ -32,6 +32,11 @@ class GraphView : View() {
         userInputModel.apply {
             equation.onChange {
                 redraw(it, leftBorder.value, rightBorder.value, accuracy.value)
+                userInputModel.apply {
+                    leftBorder.value = -5.0
+                    rightBorder.value = 5.0
+                    accuracy.value = 0.01
+                }
             }
 
             leftBorder.onChange {
@@ -69,7 +74,7 @@ class GraphView : View() {
     }
 
     override val root = vbox {
-        linechart("Graph", NumberAxis(-10.0, 10.0, 1.0), NumberAxis(-80.0, 80.0, 1.0)) {
+        linechart("Graph", NumberAxis(-7.0, 7.0, 1.0), NumberAxis(-50.0, 50.0, 1.0)) {
             isLegendVisible = false
             cursor = Cursor.CROSSHAIR
 

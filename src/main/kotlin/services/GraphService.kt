@@ -62,6 +62,25 @@ class GraphService : Controller() {
             return isDerivativeSaveSign(userInputModel, 2)
         }
 
+        /**
+         * Checks f'(x) == 0 on interval
+         */
+        fun isFirstDerivativeZero(userInputModel: UserInputModel): Boolean {
+            val equation = userInputModel.equation.value
+            val b = userInputModel.rightBorder.value
+            val a = userInputModel.leftBorder.value
+
+            var from = a
+            while (from <= b) {
+                if (MathUtils.findDerivativeByX(equation, from) == 0.0) {
+                    return true
+                }
+                from += userInputModel.accuracy.value
+            }
+
+            return false
+        }
+
         private fun isDerivativeSaveSign(userInputModel: UserInputModel, derivativePower: Int): Boolean {
             val equation = userInputModel.equation.value
             val b = userInputModel.rightBorder.value

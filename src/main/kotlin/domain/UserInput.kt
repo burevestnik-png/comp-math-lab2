@@ -2,7 +2,7 @@ package domain
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import services.computations.methods.CompMethodType
+import domain.enums.CompMethodType
 import tornadofx.getProperty
 import tornadofx.property
 

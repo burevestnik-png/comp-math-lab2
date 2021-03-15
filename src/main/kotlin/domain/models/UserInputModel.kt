@@ -4,7 +4,7 @@ import domain.Equation
 import domain.UserInput
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.Property
-import services.computations.methods.CompMethodType
+import domain.enums.CompMethodType
 import tornadofx.ItemViewModel
 
 class UserInputModel : ItemViewModel<UserInput>(UserInput().apply {
