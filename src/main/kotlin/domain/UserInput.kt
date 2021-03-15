@@ -2,6 +2,7 @@ package domain
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import services.computations.methods.CompMethodType
 import tornadofx.getProperty
 import tornadofx.property
 
@@ -53,6 +54,9 @@ class UserInput {
     var accuracy: Double by property<Double>()
     fun accuracyProperty() = getProperty(UserInput::accuracy)
 
+    var methodType: CompMethodType by property<CompMethodType>()
+    fun methodTypeProperty() = getProperty(UserInput::methodType)
+
     override fun toString() =
-        "UserInput(equation=$equation, leftBorder=$leftBorder, rightBorder=$rightBorder, accuracy=$accuracy)"
+        "UserInput(equation=$equation, leftBorder=$leftBorder, rightBorder=$rightBorder, accuracy=$accuracy, methodType=$methodType)"
 }

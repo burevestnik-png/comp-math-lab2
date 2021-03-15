@@ -9,6 +9,7 @@ import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import services.LogService
 import services.computations.ComputationService
+import services.computations.methods.CompMethodType
 import services.dao.JsonDAO
 import services.dao.Mode
 import tornadofx.*
@@ -53,6 +54,18 @@ class OptionView : View() {
                 field("Left border:").textfield(userInputModel.leftBorder)
                 field("Right border:").textfield(userInputModel.rightBorder)
                 field("Accuracy:").textfield(userInputModel.accuracy)
+                field("Computation method:") {
+                    togglegroup {
+                        CompMethodType.values().forEach {
+                            radiobutton(it.toString(), value = it) {
+                                alignment = Pos.CENTER
+                                hgrow = Priority.ALWAYS
+                            }
+                        }
+
+                        bind(userInputModel.methodType)
+                    }
+                }
             }
 
             hbox {

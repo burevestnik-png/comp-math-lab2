@@ -18,14 +18,6 @@ class RootView : View("Yarki's computations") {
     private val jsonUserInputDAO: JsonDAO<JsonUserInput> by inject()
     private val userInputModel: UserInputModel by inject()
 
-    init {
-        userInputModel.apply {
-            leftBorder.value = -10.0
-            rightBorder.value = 10.0
-            accuracy.value = 0.1
-        }
-    }
-
     override val root = borderpane {
         top = menubar {
             menu("Menu") {

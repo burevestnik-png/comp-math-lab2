@@ -24,9 +24,9 @@ class GraphView : View() {
         currentGraph.value =
             graphService.getPlotMeta(
                 userInputModel.equation.value,
-                -10.0,
-                10.0,
-                0.1
+                userInputModel.leftBorder.value,
+                userInputModel.rightBorder.value,
+                userInputModel.accuracy.value
             ) as? ObservableList<XYChart.Data<Number, Number>>?
 
         userInputModel.apply {
