@@ -1,7 +1,8 @@
-package services
+package services.utils
 
 import domain.Equation
 import domain.enums.Sign
+import services.Parser
 import services.computations.MathUtils
 
 class Formatter {
@@ -24,6 +25,7 @@ class Formatter {
                         }
                     }
                 }
+                result += " = 0"
                 return result
             }
         }

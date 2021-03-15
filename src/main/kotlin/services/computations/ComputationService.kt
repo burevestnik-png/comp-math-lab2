@@ -1,7 +1,7 @@
 package services.computations
 
 import domain.models.UserInputModel
-import services.Formatter
+import services.utils.Formatter
 import services.LogService
 import services.computations.methods.ChordMethod
 import services.computations.methods.CompMethodType

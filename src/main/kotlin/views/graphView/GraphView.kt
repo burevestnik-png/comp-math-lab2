@@ -39,7 +39,6 @@ class GraphView : View() {
                     redraw(equation.value, it, rightBorder.value, accuracy.value)
                 } else {
                     Alerts.error("Input error", "Left border can't be greater than right!")
-                    userInputModel.leftBorder.value = 0.0
                 }
             }
 
