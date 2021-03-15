@@ -9,6 +9,8 @@ data class Equation(
     @SerializedName("right-tokens")
     val rightTokens: Array<String>
 ) {
+    constructor(leftTokens: Array<String>) : this(leftTokens, arrayOf("0"))
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

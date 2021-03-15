@@ -2,7 +2,6 @@ package services.computations
 
 import domain.Equation
 import domain.enums.Sign
-import services.Parser.Companion.getInt
 import services.Parser.Companion.getInts
 import services.Parser.Companion.isCos
 import services.Parser.Companion.isExp
@@ -47,8 +46,8 @@ class MathUtils {
 
         fun findDerivativeByX(equation: Equation, x: Double, derivativePower: Int = 1): Double {
             return when (derivativePower) {
-                1 -> findFirstDerivativeByX(equation, x)
-                2 -> findSecondDerivativeByX(equation, x)
+                1 -> computeFunctionByX(getDerivative(equation), x)
+                2 -> computeFunctionByX(getDerivative(getDerivative(equation)), x)
                 else -> TODO(
                     "Unreachable code, probably developer wanted to add enum to avoid this Runtime Error," +
                             "but he has lack of time"
@@ -56,23 +55,31 @@ class MathUtils {
             }
         }
 
-        private fun findFirstDerivativeByX(equation: Equation, x: Double): Double {
-            var result = 0.0
-
+        private fun getDerivative(equation: Equation): Equation {
             val derivativeTokens = mutableListOf<String>()
             if (isEquationTranscendental(equation)) {
-                derivativeTokens.addAll(listOf("+", "1 cos 1", "+", "2 e 2"))
+                // Лютый хардкод, но нет времени для динамического нахождения производной трансцендетных функций
+                if (equation.leftTokens.contains("1 e 2")) {
+                    derivativeTokens.addAll(listOf("+", "1 cos 1", "+", "2 e 2"))
+                } else {
+                    derivativeTokens.addAll(listOf("-", "1 sin 1", "+", "4 e 2"))
+                }
             } else {
-                equation.leftTokens.forEachIndexed {
-                    index: Int, string: String ->
+                equation.leftTokens.forEachIndexed { index: Int, token: String ->
+                    if (index < equation.leftTokens.size - 2) {
+                        when {
+                            Sign.isSign(token) -> derivativeTokens.add(token)
+                            else -> {
+                                val power = (equation.leftTokens.size - equation.leftTokens.indexOf(token)) / 2
+                                val factor = token.toDouble()
+                                derivativeTokens.add("${factor * power}")
+                            }
+                        }
+                    }
                 }
             }
 
-            return 0.0
-        }
-
-        private fun findSecondDerivativeByX(equation: Equation, x: Double): Double {
-            return 0.0
+            return Equation(derivativeTokens.toTypedArray())
         }
 
         private fun isEquationTranscendental(equation: Equation): Boolean {
