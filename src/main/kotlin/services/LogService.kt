@@ -13,6 +13,11 @@ class LogService : Controller() {
         println()
     }
 
+    fun printdln(string: String) {
+        println(string)
+        println()
+    }
+
     fun println() = logs.set(getSnapshot() + "\n")
 
     private fun getSnapshot(): String = logs.get() ?: ""

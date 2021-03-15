@@ -1,6 +1,7 @@
 package services.computations
 
 import domain.models.UserInputModel
+import services.Formatter
 import services.LogService
 import services.computations.methods.ChordMethod
 import services.computations.methods.CompMethodType
@@ -14,7 +15,7 @@ class ComputationService : Controller() {
     )
 
     fun computeEquation(userInputModel: UserInputModel) {
-        logService.run { println(); println("Solving ${userInputModel.equation.value}") }
+        logService.run { println(); println("Solving ${Formatter.formatEquation(userInputModel.equation.value)}") }
         val logs = (availableMethods[userInputModel.methodType.value] ?: error("Unreachable nullptr")).run {
             logService.run {
                 println("Computing extreme right root by: $description")

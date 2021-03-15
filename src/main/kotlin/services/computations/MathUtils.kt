@@ -79,7 +79,7 @@ class MathUtils {
             return Equation(derivativeTokens.toTypedArray())
         }
 
-        private fun isEquationTranscendental(equation: Equation): Boolean {
+        fun isEquationTranscendental(equation: Equation): Boolean {
             var result = false
             equation.leftTokens.forEach { token -> if (isExp(token) || isSin(token) || isCos(token)) result = true }
             return result
