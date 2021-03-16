@@ -1,6 +1,4 @@
-# Computationsl math lab 2
-
-> This is first lab in discipline WEB-programming
+# Computational math lab 2
 
 [![GitHub stars][stars-shield]][stars-url]
 [![GitHub issues][issues-shield]][issues-url]
@@ -21,9 +19,13 @@ Stack of technologies:
 Все это дело реализуется через GUI.
 
 ##  Как заставить работать
-```[root] gradlew clean jar```
-```cd build/libs/```
+```[root] gradlew clean jar``` <br/>
+```cd build/libs/```<br/>
 ```java -jar solver.jar```
+
+## Как выглядит
+![First view](./docs/1.png)
+![Second view](./docs/2.png)
 
 [stars-shield]: https://img.shields.io/github/stars/burevestnik-png/comp-math-lab2?style=social
 [stars-url]: https://github.com/burevestnik-png/comp-math-lab2/stargazers
