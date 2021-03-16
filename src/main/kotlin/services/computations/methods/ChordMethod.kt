@@ -119,6 +119,7 @@ class ChordMethod : ComputationMethod {
             guess = x
         }
 
+        logService.println("Iterations: $iterations")
         logService.println("Root: $guess")
         return logs
     }

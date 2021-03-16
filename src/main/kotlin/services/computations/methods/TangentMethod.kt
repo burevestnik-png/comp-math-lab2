@@ -51,7 +51,8 @@ class TangentMethod : ComputationMethod {
         var nextX = x - f(equation, x) / df(equation, x)
         logs.add(TangentLog(x, f(equation, x), df(equation, x), nextX, abs(x - nextX)))
 
-        while (abs(x - nextX) > userInputModel.accuracy.value && iterations < 1000) {
+        while ((abs(x - nextX) > userInputModel.accuracy.value || abs(f(equation, nextX)) > userInputModel.accuracy.value)
+            && iterations < 1000) {
             x = nextX
             nextX = x - f(equation, x) / df(equation, x)
             iterations++
@@ -59,6 +60,8 @@ class TangentMethod : ComputationMethod {
         }
 
         logService.println("Root: $nextX")
+        logService.println("Iterations: $iterations")
+        logService.println("F(root): ${f(equation, nextX)}")
         return logs
     }
 }
