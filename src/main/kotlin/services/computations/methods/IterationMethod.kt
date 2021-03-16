@@ -1,7 +1,10 @@
 package services.computations.methods
 
+import domain.Equation
+import domain.enums.Sign
 import domain.models.UserInputModel
 import services.LogService
+import services.computations.MathUtils
 import kotlin.math.abs
 import services.computations.MathUtils.Companion.computeFunctionByX as f
 import services.computations.MathUtils.Companion.findDerivativeByX as df
@@ -10,7 +13,7 @@ data class IterationLog(
     val x: Double,
     val nextX: Double,
     val phiNextX: Double,
-    val fNextX: Double,
+    val fx: Double,
     val condition: Double
 ) : Log
 
@@ -39,7 +42,12 @@ class IterationMethod : ComputationMethod {
             logs.add(IterationLog(previousX, x, x + lambda * f(equation, x), f(equation, x), abs(x - previousX)))
         } while (abs(x - previousX) > userInputModel.accuracy.value && iterations < 1000)
 
-        logService.println("Root: $x")
-        return logs
+        return if (x.isNaN()) {
+            logService.println("The condition |phi'(x)| < 1 on [a,b] doesn't coverage")
+            emptyList()
+        } else {
+            logService.println("Root: $x")
+            logs
+        }
     }
 }
