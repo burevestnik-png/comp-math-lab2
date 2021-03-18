@@ -1,5 +1,6 @@
 package services.computations.methods
 
+import domain.Equation
 import domain.models.UserInputModel
 import services.GraphService
 import services.LogService
@@ -56,36 +57,12 @@ class ChordMethod : ComputationMethod {
         val a = userInputModel.leftBorder.value
         val b = userInputModel.rightBorder.value
 
-        var guess = 0.0
-        var iterations = 0
-        if (f(equation, a) * df(equation, a, 2) > 0) {
-            // -4 -> -1
-            guess = a
-            val fb = f(equation, b)
-            do {
-                val previousGuess = guess
-                val fGuess = f(equation, previousGuess)
-
-                guess -= (b - guess) * fGuess / (fb - fGuess) // aka x
-                val fx = f(equation, guess)
-
-                logs.add(FixedChordLog(previousGuess, b, guess, fGuess, fb, fx, abs(previousGuess - guess)))
-                iterations++
-            } while (abs(previousGuess - guess) > userInputModel.accuracy.value && iterations < 1000)
-        } else if (f(equation, b) * df(equation, b, 2) > 0) {
-            // -0,4 -> 1
-            guess = b
-            val fa = f(equation, a)
-            do {
-                val previousGuess = guess
-                val fGuess = f(equation, previousGuess)
-
-                guess -= (a - guess) * fGuess / (fa - fGuess) // aka x
-                val fx = f(equation, guess)
-
-                logs.add(FixedChordLog(a, previousGuess, guess, fa, fGuess, fx, abs(previousGuess - guess)))
-                iterations++
-            } while (abs(previousGuess - guess) > userInputModel.accuracy.value && iterations < 1000)
+        var (guess, iterations) =  when {
+            f(equation, a) * df(equation, a, 2) > 0 ->
+                computeWithBorderGuess(a, b, equation, logs, userInputModel.accuracy.value) // -4 -> -1
+            f(equation, b) * df(equation, b, 2) > 0 ->
+                computeWithBorderGuess(b, a, equation, logs, userInputModel.accuracy.value) // -0,4 -> 1
+            else -> Pair(0.0, 0)
         }
 
         if (iterations >= 1000) {
@@ -121,6 +98,36 @@ class ChordMethod : ComputationMethod {
 
         logService.println("Iterations: $iterations")
         logService.println("Root: $guess")
+        logService.println("f(root): ${f(equation, guess)}")
         return logs
+    }
+
+    private fun computeWithBorderGuess(guess: Double, fixedBorder: Double, equation: Equation, logs: MutableList<Log>, accuracy: Double): Pair<Double, Int> {
+        val fFixed = f(equation, fixedBorder)
+        var copyGuess = guess
+        var iterations = 0
+
+        do {
+            val previousGuess = copyGuess
+            val fGuess = f(equation, previousGuess)
+
+            copyGuess -= (fixedBorder - copyGuess) * fGuess / (fFixed - fGuess) // aka x
+            val fx = f(equation, copyGuess)
+            iterations++
+
+            logs.add(
+                FixedChordLog(
+                    previousGuess,
+                    fixedBorder,
+                    copyGuess,
+                    fGuess,
+                    fFixed,
+                    fx,
+                    abs(previousGuess - copyGuess)
+                )
+            )
+        } while ((abs(previousGuess - copyGuess) > accuracy || abs(f(equation, copyGuess)) > accuracy ) && iterations < 1000)
+
+        return Pair(copyGuess, iterations)
     }
 }
