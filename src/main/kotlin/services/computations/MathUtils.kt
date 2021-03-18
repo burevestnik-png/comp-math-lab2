@@ -67,7 +67,7 @@ class MathUtils {
                         when {
                             Sign.isSign(token) -> derivativeTokens.add(token)
                             else -> {
-                                val power = (equation.leftTokens.size - equation.leftTokens.indexOf(token)) / 2
+                                val power = (equation.leftTokens.size - index) / 2
                                 val factor = token.toDouble()
                                 derivativeTokens.add("${factor * power}")
                             }
